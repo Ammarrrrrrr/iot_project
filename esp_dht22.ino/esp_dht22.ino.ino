@@ -8,14 +8,14 @@
 
 #define DHTPIN 5
 #define DHTTYPE DHT22
-#define LED_PIN 
+#define LED_PIN 14
 
 DHT dht(DHTPIN, DHTTYPE);
 
 char auth[] = BLYNK_AUTH_TOKEN;
 
-const char* ssid = "WEHOME11";
-const char* password = "4080740807";
+const char* ssid = "ammar";
+const char* password = "00000000";
 
 void setup() {
   // Debug console
@@ -45,16 +45,14 @@ void loop() {
 
   // Read sensor values
   float temperature = dht.readTemperature();
-
-
   float humidity = dht.readHumidity();
-  // Generate random values for noise level and air quality
-  int noiseLevel = random(30, 100); // Simulated noise level (dB)
-  int airQuality = random(0, 500);  // Simulated air quality index (AQI)
+
+  int noiseLevel = random(45, 75); // Simulated noise level (dB)
+  int airQuality = random(20, 150);  // Simulated AQI range
 
   if (!isnan(temperature)) {
     Blynk.virtualWrite(V1, temperature); 
-    if (temperature > 24.00) {digitalWrite(LED_PIN, HIGH);} else {digitalWrite(LED_PIN,LOW );}
+    if (temperature >= 24.00) {digitalWrite(LED_PIN, HIGH);Blynk.virtualWrite(V5,1);} else {digitalWrite(LED_PIN,LOW );Blynk.virtualWrite(V5,0);}
   } else {
     Serial.println("Failed to read temperature from DHT sensor");
   }
@@ -65,7 +63,7 @@ void loop() {
     Serial.println("Failed to read humidity from DHT sensor");
   }
 
-  // Send random values to Blynk
+  // Send realistic values to Blynk
   Blynk.virtualWrite(V3, noiseLevel); 
   Blynk.virtualWrite(V4, airQuality);
 
